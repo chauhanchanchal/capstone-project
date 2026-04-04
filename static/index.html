@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusEvents — Register & Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #0a0a0f;
+            --card: #12121a;
+            --border: #1e1e2e;
+            --accent: #6c5ce7;
+            --accent-glow: #a29bfe;
+            --success: #00cec9;
+            --error: #ff6b6b;
+            --warning: #fdcb6e;
+            --text: #e8e8f0;
+            --text-dim: #8888a0;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .bg-grid {
+            position: fixed; inset: 0;
+            background-image:
+                linear-gradient(rgba(108,92,231,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(108,92,231,0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            z-index: 0;
+        }
+
+        .bg-orb {
+            position: fixed; border-radius: 50%;
+            filter: blur(100px); opacity: 0.25; z-index: 0;
+            animation: float 20s ease-in-out infinite;
+        }
+        .bg-orb-1 { width: 500px; height: 500px; background: #6c5ce7; top: -150px; left: -100px; }
+        .bg-orb-2 { width: 400px; height: 400px; background: #00cec9; bottom: -100px; right: -100px; animation-delay: -10s; }
+        .bg-orb-3 { width: 300px; height: 300px; background: #fd79a8; top: 50%; left: 60%; animation-delay: -5s; }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0,0) scale(1); }
+            33% { transform: translate(30px,-30px) scale(1.05); }
+            66% { transform: translate(-20px,20px) scale(0.95); }
+        }
+
+        nav {
+            position: relative; z-index: 10;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 20px 48px;
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(20px);
+            background: rgba(10,10,15,0.7);
+        }
+
+        .logo {
+            font-family: 'Syne', sans-serif; font-weight: 800;
+            font-size: 1.4rem; display: flex; align-items: center; gap: 10px;
+        }
+
+        .logo-icon {
+            width: 36px; height: 36px;
+            background: linear-gradient(135deg, var(--accent), var(--success));
+            border-radius: 10px; display: flex; align-items: center;
+            justify-content: center; font-size: 18px;
+        }
+
+        .nav-tabs { display: flex; gap: 4px; background: rgba(255,255,255,0.03); border-radius: 10px; padding: 4px; }
+
+        .nav-tab {
+            padding: 8px 22px; border-radius: 8px; border: none;
+            background: transparent; color: var(--text-dim);
+            font-family: 'DM Sans', sans-serif; font-size: 0.88rem;
+            font-weight: 600; cursor: pointer; transition: all 0.3s;
+        }
+        .nav-tab:hover { color: var(--text); }
+        .nav-tab.active {
+            background: var(--accent); color: #fff;
+            box-shadow: 0 2px 12px rgba(108,92,231,0.4);
+        }
+
+        .section { display: none; position: relative; z-index: 10; }
+        .section.active { display: block; }
+
+        .reg-container {
+            max-width: 1100px; margin: 0 auto; padding: 60px 24px;
+            display: flex; gap: 60px; align-items: center;
+        }
+
+        .hero { flex: 1; }
+
+        .badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 6px 14px; border-radius: 100px;
+            background: rgba(108,92,231,0.1); border: 1px solid rgba(108,92,231,0.2);
+            font-size: 0.8rem; font-weight: 600; color: var(--accent-glow);
+            margin-bottom: 24px; animation: fadeUp 0.6s ease;
+        }
+        .badge::before {
+            content: ''; width: 6px; height: 6px;
+            background: var(--success); border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+        .hero h1 {
+            font-family: 'Syne', sans-serif; font-weight: 800;
+            font-size: 3.2rem; line-height: 1.1; letter-spacing: -1.5px;
+            margin-bottom: 18px; animation: fadeUp 0.6s ease 0.1s both;
+        }
+        .hero h1 span {
+            background: linear-gradient(135deg, var(--accent-glow), var(--success));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            color: var(--text-dim); font-size: 1.05rem; line-height: 1.7;
+            max-width: 420px; animation: fadeUp 0.6s ease 0.2s both;
+        }
+
+        .event-tags {
+            display: flex; gap: 10px; margin-top: 28px;
+            flex-wrap: wrap; animation: fadeUp 0.6s ease 0.3s both;
+        }
+        .event-tag {
+            padding: 8px 16px; border-radius: 100px; font-size: 0.82rem;
+            font-weight: 600; border: 1px solid var(--border);
+            background: rgba(255,255,255,0.02); display: flex;
+            align-items: center; gap: 6px;
+        }
+        .event-tag .dot { width: 8px; height: 8px; border-radius: 50%; }
+
+        .stats {
+            display: flex; gap: 24px; margin-top: 40px;
+            animation: fadeUp 0.6s ease 0.4s both;
+        }
+        .stat { text-align: center; }
+        .stat-num {
+            font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.8rem;
+            background: linear-gradient(135deg, var(--accent-glow), var(--success));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .stat-label { font-size: 0.78rem; color: var(--text-dim); margin-top: 2px; }
+
+        .form-card {
+            flex: 1; max-width: 440px;
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 20px; padding: 40px;
+            backdrop-filter: blur(20px);
+            animation: fadeUp 0.6s ease 0.2s both;
+            position: relative; overflow: hidden;
+        }
+        .form-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--success), var(--accent));
+            background-size: 200% 100%; animation: shimmer 3s ease infinite;
+        }
+        @keyframes shimmer { 0%{background-position:-200% 0} 100%{background-position:200% 0} }
+
+        .form-card h2 {
+            font-family: 'Syne', sans-serif; font-weight: 700;
+            font-size: 1.5rem; margin-bottom: 6px;
+        }
+        .form-card .subtitle { color: var(--text-dim); font-size: 0.88rem; margin-bottom: 30px; }
+
+        .field { margin-bottom: 20px; }
+        .field label {
+            display: block; font-size: 0.82rem; font-weight: 600;
+            color: var(--text-dim); margin-bottom: 8px;
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .field input, .field select {
+            width: 100%; padding: 14px 16px; border-radius: 12px;
+            border: 1px solid var(--border); background: rgba(255,255,255,0.03);
+            color: var(--text); font-size: 0.95rem;
+            font-family: 'DM Sans', sans-serif; transition: all 0.3s; outline: none;
+        }
+        .field input::placeholder { color: var(--text-dim); opacity: 0.5; }
+        .field input:focus, .field select:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(108,92,231,0.15);
+            background: rgba(108,92,231,0.03);
+        }
+        .field select option { background: var(--card); color: var(--text); }
+
+        .submit-btn {
+            width: 100%; padding: 16px; border: none; border-radius: 12px;
+            background: linear-gradient(135deg, var(--accent), #8b7cf7);
+            color: #fff; font-family: 'DM Sans', sans-serif;
+            font-size: 1rem; font-weight: 600; cursor: pointer;
+            transition: all 0.3s; margin-top: 8px;
+        }
+        .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(108,92,231,0.4); }
+        .submit-btn:active { transform: translateY(0); }
+        .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+        /* ============ ADMIN LOGIN ============ */
+        .admin-lock {
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            min-height: 60vh; animation: fadeUp 0.5s ease;
+        }
+
+        .lock-card {
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 20px; padding: 48px 40px;
+            max-width: 400px; width: 100%;
+            text-align: center; position: relative; overflow: hidden;
+        }
+        .lock-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+            background: linear-gradient(90deg, var(--error), var(--accent), var(--error));
+            background-size: 200% 100%; animation: shimmer 3s ease infinite;
+        }
+
+        .lock-icon { font-size: 3rem; margin-bottom: 16px; }
+
+        .lock-card h2 {
+            font-family: 'Syne', sans-serif; font-weight: 700;
+            font-size: 1.4rem; margin-bottom: 8px;
+        }
+        .lock-card .lock-sub { color: var(--text-dim); font-size: 0.88rem; margin-bottom: 28px; }
+
+        .lock-card input {
+            width: 100%; padding: 14px 16px; border-radius: 12px;
+            border: 1px solid var(--border); background: rgba(255,255,255,0.03);
+            color: var(--text); font-size: 0.95rem;
+            font-family: 'DM Sans', sans-serif; outline: none;
+            transition: all 0.3s; margin-bottom: 16px; text-align: center;
+            letter-spacing: 3px;
+        }
+        .lock-card input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(108,92,231,0.15);
+        }
+        .lock-card input::placeholder { letter-spacing: 0; }
+
+        .lock-btn {
+            width: 100%; padding: 14px; border: none; border-radius: 12px;
+            background: linear-gradient(135deg, var(--accent), #8b7cf7);
+            color: #fff; font-family: 'DM Sans', sans-serif;
+            font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: all 0.3s;
+        }
+        .lock-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(108,92,231,0.4); }
+
+        .lock-error {
+            color: var(--error); font-size: 0.84rem; margin-top: 12px;
+            display: none; font-weight: 600;
+        }
+
+        /* ============ ADMIN SECTION ============ */
+        .dashboard { max-width: 1200px; margin: 0 auto; padding: 48px 24px; }
+
+        .dash-header { margin-bottom: 36px; animation: fadeUp 0.5s ease; }
+        .dash-header h1 {
+            font-family: 'Syne', sans-serif; font-weight: 800;
+            font-size: 2rem; letter-spacing: -1px;
+        }
+        .dash-header p { color: var(--text-dim); margin-top: 6px; }
+
+        .stat-cards {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px; margin-bottom: 36px;
+        }
+        .stat-card {
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 16px; padding: 24px; animation: fadeUp 0.5s ease both;
+        }
+        .stat-card:nth-child(2){animation-delay:.05s}
+        .stat-card:nth-child(3){animation-delay:.1s}
+        .stat-card:nth-child(4){animation-delay:.15s}
+        .stat-card .s-label {
+            font-size: 0.8rem; color: var(--text-dim);
+            text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;
+        }
+        .stat-card .s-value {
+            font-family: 'Syne', sans-serif; font-weight: 800; font-size: 2rem; margin-top: 6px;
+        }
+        .stat-card .s-icon { font-size: 1.4rem; margin-bottom: 8px; }
+
+        .toolbar {
+            display: flex; gap: 12px; margin-bottom: 20px;
+            flex-wrap: wrap; animation: fadeUp 0.5s ease 0.2s both;
+        }
+        .search-box {
+            flex: 1; min-width: 200px; padding: 12px 16px; border-radius: 12px;
+            border: 1px solid var(--border); background: rgba(255,255,255,0.03);
+            color: var(--text); font-size: 0.9rem;
+            font-family: 'DM Sans', sans-serif; outline: none; transition: all 0.3s;
+        }
+        .search-box:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(108,92,231,0.15); }
+        .search-box::placeholder { color: var(--text-dim); opacity: 0.5; }
+
+        .filter-btn {
+            padding: 12px 20px; border-radius: 12px;
+            border: 1px solid var(--border); background: rgba(255,255,255,0.03);
+            color: var(--text-dim); font-family: 'DM Sans', sans-serif;
+            font-size: 0.88rem; font-weight: 500; cursor: pointer; transition: all 0.3s;
+        }
+        .filter-btn:hover, .filter-btn.active {
+            border-color: var(--accent); color: var(--accent-glow);
+            background: rgba(108,92,231,0.08);
+        }
+        .refresh-btn {
+            padding: 12px 20px; border-radius: 12px; border: none;
+            background: linear-gradient(135deg, var(--accent), #8b7cf7);
+            color: #fff; font-family: 'DM Sans', sans-serif;
+            font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: all 0.3s;
+        }
+        .refresh-btn:hover { box-shadow: 0 4px 20px rgba(108,92,231,0.4); }
+
+        .table-card {
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 16px; overflow: hidden;
+            animation: fadeUp 0.5s ease 0.25s both;
+        }
+        table { width: 100%; border-collapse: collapse; }
+        thead th {
+            padding: 16px 20px; text-align: left; font-size: 0.78rem;
+            text-transform: uppercase; letter-spacing: 0.5px;
+            color: var(--text-dim); font-weight: 600;
+            border-bottom: 1px solid var(--border); background: rgba(255,255,255,0.01);
+        }
+        tbody td {
+            padding: 16px 20px; font-size: 0.9rem;
+            border-bottom: 1px solid rgba(30,30,46,0.5);
+        }
+        tbody tr { transition: background 0.2s; }
+        tbody tr:hover { background: rgba(108,92,231,0.03); }
+        tbody tr:last-child td { border-bottom: none; }
+
+        .event-badge {
+            display: inline-block; padding: 4px 12px; border-radius: 100px;
+            font-size: 0.78rem; font-weight: 600;
+        }
+        .event-badge.tech { background: rgba(108,92,231,0.15); color: var(--accent-glow); }
+        .event-badge.cultural { background: rgba(0,206,201,0.15); color: var(--success); }
+        .event-badge.workshop { background: rgba(253,121,168,0.15); color: #fd79a8; }
+        .event-badge.hackathon { background: rgba(253,203,110,0.15); color: var(--warning); }
+        .event-badge.other { background: rgba(255,255,255,0.08); color: var(--text-dim); }
+
+        .empty-state { text-align: center; padding: 60px 20px; color: var(--text-dim); }
+        .empty-state .e-icon { font-size: 3rem; margin-bottom: 16px; }
+        .loading { text-align: center; padding: 40px; color: var(--text-dim); }
+
+        .toast {
+            position: fixed; top: 24px; right: 24px; padding: 16px 24px;
+            border-radius: 14px; font-weight: 600; font-size: 0.92rem;
+            z-index: 1000; transform: translateX(120%);
+            transition: transform 0.5s cubic-bezier(0.16,1,0.3,1);
+            display: flex; align-items: center; gap: 10px; backdrop-filter: blur(20px);
+        }
+        .toast.show { transform: translateX(0); }
+        .toast.success { background: rgba(0,206,201,0.15); border: 1px solid rgba(0,206,201,0.3); color: var(--success); }
+        .toast.error { background: rgba(255,107,107,0.15); border: 1px solid rgba(255,107,107,0.3); color: var(--error); }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            nav { padding: 16px 20px; flex-wrap: wrap; gap: 12px; }
+            .reg-container { flex-direction: column; padding: 36px 20px; gap: 36px; }
+            .hero h1 { font-size: 2.2rem; }
+            .form-card { max-width: 100%; padding: 28px; }
+            .stats { gap: 16px; }
+            .dashboard { padding: 24px 16px; }
+            .dash-header h1 { font-size: 1.5rem; }
+            .table-card { overflow-x: auto; }
+            table { min-width: 600px; }
+            .lock-card { margin: 0 20px; padding: 36px 24px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-grid"></div>
+    <div class="bg-orb bg-orb-1"></div>
+    <div class="bg-orb bg-orb-2"></div>
+    <div class="bg-orb bg-orb-3"></div>
+
+    <nav>
+        <div class="logo">
+            <div class="logo-icon">🎓</div>
+            CampusEvents
+        </div>
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="switchTab('register')">Register</button>
+            <button class="nav-tab" onclick="switchTab('admin')">Admin Dashboard</button>
+        </div>
+    </nav>
+
+    <!-- ========== REGISTRATION SECTION ========== -->
+    <div class="section active" id="sec-register">
+        <div class="reg-container">
+            <div class="hero">
+                <div class="badge">Registrations Open</div>
+                <h1>Register for<br><span>Campus Events</span></h1>
+                <p>Join exciting college events — from tech fests to cultural nights. Sign up in seconds and secure your spot.</p>
+                <div class="event-tags">
+                    <div class="event-tag"><div class="dot" style="background:#6c5ce7"></div>Tech Fest</div>
+                    <div class="event-tag"><div class="dot" style="background:#00cec9"></div>Cultural Night</div>
+                    <div class="event-tag"><div class="dot" style="background:#fd79a8"></div>Workshop</div>
+                    <div class="event-tag"><div class="dot" style="background:#fdcb6e"></div>Hackathon</div>
+                </div>
+                <div class="stats">
+                    <div class="stat"><div class="stat-num" id="heroTotal">0</div><div class="stat-label">Registered</div></div>
+                    <div class="stat"><div class="stat-num">12</div><div class="stat-label">Events</div></div>
+                    <div class="stat"><div class="stat-num">4</div><div class="stat-label">Days Left</div></div>
+                </div>
+            </div>
+
+            <div class="form-card">
+                <h2>Event Registration</h2>
+                <p class="subtitle">Fill in your details to register</p>
+                <form id="regForm">
+                    <div class="field">
+                        <label>Full Name</label>
+                        <input type="text" id="fullName" placeholder="e.g. Rahul Sharma" required>
+                    </div>
+                    <div class="field">
+                        <label>Email Address</label>
+                        <input type="email" id="email" placeholder="e.g. rahul@university.edu" required>
+                    </div>
+                    <div class="field">
+                        <label>Select Event</label>
+                        <select id="eventName" required>
+                            <option value="">Choose an event...</option>
+                            <option value="Tech Fest">🖥️ Tech Fest</option>
+                            <option value="Cultural Night">🎭 Cultural Night</option>
+                            <option value="Workshop">🛠️ Workshop</option>
+                            <option value="Hackathon">💡 Hackathon</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="submit-btn" id="submitBtn">Register Now →</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== ADMIN SECTION ========== -->
+    <div class="section" id="sec-admin">
+
+        <!-- Admin Login Gate -->
+        <div class="admin-lock" id="adminLock">
+            <div class="lock-card">
+                <div class="lock-icon">🔒</div>
+                <h2>Admin Access</h2>
+                <p class="lock-sub">Enter admin password to view dashboard</p>
+                <input type="password" id="adminPass" placeholder="Enter password" onkeydown="if(event.key==='Enter') checkAdmin()">
+                <button class="lock-btn" onclick="checkAdmin()">Unlock Dashboard →</button>
+                <p class="lock-error" id="lockError">Incorrect password. Try again.</p>
+            </div>
+        </div>
+
+        <!-- Dashboard (hidden until password correct) -->
+        <div class="dashboard" id="dashboardContent" style="display:none;">
+            <div class="dash-header">
+                <h1>Admin Dashboard</h1>
+                <p>View and manage all event registrations</p>
+            </div>
+
+            <div class="stat-cards">
+                <div class="stat-card"><div class="s-icon">📊</div><div class="s-label">Total Registrations</div><div class="s-value" id="totalCount">—</div></div>
+                <div class="stat-card"><div class="s-icon">🖥️</div><div class="s-label">Tech Fest</div><div class="s-value" id="techCount">—</div></div>
+                <div class="stat-card"><div class="s-icon">🎭</div><div class="s-label">Cultural Night</div><div class="s-value" id="culturalCount">—</div></div>
+                <div class="stat-card"><div class="s-icon">💡</div><div class="s-label">Hackathon</div><div class="s-value" id="hackCount">—</div></div>
+            </div>
+
+            <div class="toolbar">
+                <input class="search-box" type="text" id="searchBox" placeholder="Search by name or email...">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="Tech Fest">Tech Fest</button>
+                <button class="filter-btn" data-filter="Cultural Night">Cultural</button>
+                <button class="filter-btn" data-filter="Workshop">Workshop</button>
+                <button class="filter-btn" data-filter="Hackathon">Hackathon</button>
+                <button class="refresh-btn" onclick="loadData()">↻ Refresh</button>
+            </div>
+
+            <div class="table-card">
+                <table>
+                    <thead>
+                        <tr><th>#</th><th>Full Name</th><th>Email</th><th>Event</th><th>Registered At</th></tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <tr><td colspan="5" class="loading">Loading registrations...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // ===== ADMIN PASSWORD =====
+        // Change this to your own password!
+        const ADMIN_PASSWORD = 'admin123';
+        let adminUnlocked = false;
+
+        function checkAdmin() {
+            const input = document.getElementById('adminPass');
+            const error = document.getElementById('lockError');
+
+            if (input.value === ADMIN_PASSWORD) {
+                adminUnlocked = true;
+                document.getElementById('adminLock').style.display = 'none';
+                document.getElementById('dashboardContent').style.display = 'block';
+                loadData();
+                error.style.display = 'none';
+            } else {
+                error.style.display = 'block';
+                input.value = '';
+                input.style.borderColor = 'var(--error)';
+                setTimeout(() => { input.style.borderColor = 'var(--border)'; }, 1500);
+            }
+        }
+
+        // ===== TAB SWITCHING =====
+        function switchTab(tab) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+
+            document.getElementById('sec-' + tab).classList.add('active');
+            event.target.classList.add('active');
+
+            if (tab === 'admin' && adminUnlocked) loadData();
+        }
+
+        // ===== TOAST =====
+        function showToast(message, type) {
+            const toast = document.getElementById('toast');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `${type === 'success' ? '✅' : '⚠️'} ${message}`;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 4000);
+        }
+
+        // ===== REGISTRATION =====
+        document.getElementById('regForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.textContent = 'Registering...';
+
+            const data = {
+                full_name: document.getElementById('fullName').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                event_name: document.getElementById('eventName').value
+            };
+
+            try {
+                const res = await fetch('/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const result = await res.json();
+
+                if (res.ok) {
+                    showToast(result.message, 'success');
+                    document.getElementById('regForm').reset();
+                    loadHeroCount();
+                } else {
+                    showToast(result.message, 'error');
+                }
+            } catch (err) {
+                showToast('Cannot connect to server. Is Flask running?', 'error');
+            }
+
+            btn.disabled = false;
+            btn.textContent = 'Register Now →';
+        });
+
+        // ===== ADMIN DASHBOARD =====
+        let allData = [];
+        let currentFilter = 'all';
+
+        function getEventBadgeClass(ev) {
+            return { 'Tech Fest':'tech', 'Cultural Night':'cultural', 'Workshop':'workshop', 'Hackathon':'hackathon' }[ev] || 'other';
+        }
+
+        function escapeHtml(t) { const d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
+
+        function renderTable(data) {
+            const tbody = document.getElementById('tableBody');
+            if (data.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state"><div class="e-icon">📭</div><p>No registrations found</p></div></td></tr>`;
+                return;
+            }
+            tbody.innerHTML = data.map((row, i) => `
+                <tr>
+                    <td style="color:var(--text-dim)">${i+1}</td>
+                    <td><strong>${escapeHtml(row.full_name)}</strong></td>
+                    <td style="color:var(--text-dim)">${escapeHtml(row.email)}</td>
+                    <td><span class="event-badge ${getEventBadgeClass(row.event_name)}">${escapeHtml(row.event_name)}</span></td>
+                    <td style="color:var(--text-dim);font-size:0.84rem">${row.registered_at}</td>
+                </tr>
+            `).join('');
+        }
+
+        function updateStats(data) {
+            document.getElementById('totalCount').textContent = data.length;
+            document.getElementById('techCount').textContent = data.filter(r => r.event_name === 'Tech Fest').length;
+            document.getElementById('culturalCount').textContent = data.filter(r => r.event_name === 'Cultural Night').length;
+            document.getElementById('hackCount').textContent = data.filter(r => r.event_name === 'Hackathon').length;
+        }
+
+        function filterAndSearch() {
+            let filtered = allData;
+            if (currentFilter !== 'all') filtered = filtered.filter(r => r.event_name === currentFilter);
+            const q = document.getElementById('searchBox').value.toLowerCase().trim();
+            if (q) filtered = filtered.filter(r => r.full_name.toLowerCase().includes(q) || r.email.toLowerCase().includes(q));
+            renderTable(filtered);
+        }
+
+        async function loadData() {
+            try {
+                const res = await fetch('/api/registrations');
+                allData = await res.json();
+                updateStats(allData);
+                filterAndSearch();
+            } catch (err) {
+                document.getElementById('tableBody').innerHTML =
+                    '<tr><td colspan="5" class="loading" style="color:var(--error)">Failed to load data. Is Flask running?</td></tr>';
+            }
+        }
+
+        async function loadHeroCount() {
+            try {
+                const res = await fetch('/api/registrations');
+                const data = await res.json();
+                document.getElementById('heroTotal').textContent = data.length;
+            } catch(e) {}
+        }
+
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentFilter = btn.dataset.filter;
+                filterAndSearch();
+            });
+        });
+
+        document.getElementById('searchBox').addEventListener('input', filterAndSearch);
+
+        loadHeroCount();
+    </script>
+</body>
+</html>
