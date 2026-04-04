@@ -121,7 +121,7 @@ CREATE TABLE registrations (
 
 ### 3️⃣ Configure Database (app.py)
 ```python
-'password': 'your_password_here'
+'password': 'admin123'
 ```
 
 ---
