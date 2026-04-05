@@ -80,22 +80,26 @@ An admin dashboard allows viewing, searching, and managing all registrations.
 
 ## 🛠️ Tech Stack
 
-### Frontend
-- HTML  
-- CSS  
-- JavaScript  
-
-### Backend
-- Python (Flask)  
-- Flask-CORS  
-
-### Database
-- MySQL (Railway)
-
-### Hosting
-- Render  
+| Layer       | Technology Used        |
+|------------|----------------------|
+| Frontend    | HTML, CSS, JavaScript |
+| Backend     | Python (Flask), Flask-CORS |
+| Database    | MySQL (Railway)      |
+| Hosting     | Render               |
 
 ---
+
+## ☁️ Google Cloud Services (Concept)
+
+| Component        | Google Cloud Service Used |
+|-----------------|--------------------------|
+| Backend Hosting | Cloud Run                |
+| API Hosting     | Cloud Run                |
+| Database        | Cloud SQL (MySQL)        |
+| Storage         | Cloud Storage            |
+| Access Control  | IAM                      |
+| Deployment      | Container-based deployment |
+| Accessibility   | Global URL access        |
 
 ## ⚙️ Installation & Setup
 
@@ -144,40 +148,94 @@ http://127.0.0.1:5000
 
 ---
 
-## ☁️ Google Cloud Integration (Concept)
+## ☁️ Google Cloud Integration
 
-### 🔹 Backend Hosting
-- Deploy Flask app using **Cloud Run**  
-- Enables public access  
-
-### 🔹 Database
-- Use **Cloud SQL (MySQL)**  
-- Secure and managed database  
-
-### 🔹 Storage
-- Use **Cloud Storage**  
-- Store images, files, backups  
-
-### 🔹 API Hosting
-- APIs run via **Cloud Run**  
-
-### 🔹 Access
-- Globally accessible via URL  
+### 🔹 1. Setup Google Cloud Project
+- Open Google Cloud Console  
+- Create a new project  
+- Enable billing  
+- Enable required services: **Cloud Run**, **Cloud SQL**, **Cloud Storage**
 
 ---
+
+### 🔹 2. Backend Deployment (Flask → Cloud Run)
+- Prepare Flask application for deployment  
+- Containerize the application  
+- Deploy the application using **Cloud Run**  
+- Enable public access  
+
+👉 Service Used: **Cloud Run** (for hosting backend)
+
+---
+
+### 🔹 3. Database Setup
+- Create a MySQL instance  
+- Configure username and password  
+- Create required database and tables  
+- Connect backend with database  
+
+👉 Service Used: **Cloud SQL (MySQL)** (for structured data storage)
+
+---
+
+### 🔹 4. Storage Setup
+- Create a storage bucket  
+- Configure access permissions  
+- Upload and manage files (images, documents, backups)  
+
+👉 Service Used: **Cloud Storage** (for file storage)
+
+---
+
+### 🔹 5. API Handling
+- Create API endpoints in Flask  
+- Handle user requests (register, fetch data, etc.)  
+- Deploy APIs with backend  
+
+👉 Service Used: **Cloud Run** (for API hosting)
+
+---
+
+### 🔹 6. Frontend Integration
+- Connect frontend with backend using API calls  
+- Send and receive data between client and server  
+
+---
+
+### 🔹 7. Security & Access Control
+- Manage permissions using IAM  
+- Control who can access resources  
+
+👉 Service Used: **IAM (Identity and Access Management)**
+
+---
+
+### 🔹 8. Final System Flow
+1. User opens the website  
+2. Frontend sends request to backend  
+3. Backend runs on **Cloud Run**  
+4. Data is stored in **Cloud SQL**  
+5. Files are stored in **Cloud Storage**  
+6. Response is sent back to user  
+
+---
+
+We deployed our Flask backend on **Cloud Run**, used **Cloud SQL** for database management, **Cloud Storage** for file handling, and connected everything through APIs to make the system scalable and globally accessible.
 
 ## 📸 Screenshots
-| Feature | Preview |
-|--------|--------|
-| Registration Form | ![Form](screenshots/form.png) |
-| Success Message | ![Success](screenshots/success.png) |
-| Admin Dashboard | ![Dashboard](screenshots/dashboard.png) |
 
----
+### Registration Form
+![Form](screenshots/form.png)
+
+### Success Message
+![Success](screenshots/success.png)
+
+### Admin Dashboard
+![Dashboard](screenshots/dashboard.png)
 
 ## 🎥 Demo Video
 
-▶️ Click below to watch:
+▶️ Click the image below to watch:
 
 [![Watch Demo](screenshots/form.png)](https://drive.google.com/file/d/1pGBMSj3qtzhnmIr7qNftph8JPV4-ItX1/view?usp=drive_link)
 
