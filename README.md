@@ -1,13 +1,13 @@
-# 🎓 Campus Event Registration System
+#  Campus Event Registration System
 
-## 📌 Project Description
+##  Project Description
 This is a web-based event registration system built using **Flask** and **MySQL**.  
 Users can register for different college events, while duplicate registrations are prevented.  
 An admin dashboard allows viewing, searching, and managing all registrations.
 
 ---
 
-## 🚀 Features
+##  Features
 - Event registration form  
 - Duplicate email prevention (per event)  
 - Admin dashboard to view registrations  
@@ -17,14 +17,14 @@ An admin dashboard allows viewing, searching, and managing all registrations.
 
 ---
 
-## 🛠️ Technologies Used
+##  Technologies Used
 - **Frontend:** HTML, CSS, JavaScript  
 - **Backend:** Python (Flask)  
 - **Database:** MySQL  
 
 ---
 
-## 🖥️ Frontend (UI)
+##  Frontend (UI)
 
 ### 🔹 Overview
 - Built using HTML, CSS, JavaScript  
@@ -45,7 +45,7 @@ An admin dashboard allows viewing, searching, and managing all registrations.
 
 ---
 
-## ⚙️ Backend (Flask API)
+##  Backend (Flask API)
 
 ### 🔹 Overview
 - Built using Flask (Python)  
@@ -57,9 +57,6 @@ An admin dashboard allows viewing, searching, and managing all registrations.
 - Duplicate registration prevention  
 - JSON responses  
 
-### 🔹 API Endpoints
-- `POST /register` → Register user  
-- `GET /api/registrations` → Fetch all registrations  
 
 ### 🔹 Flow
 1. Receive request from frontend  
@@ -70,7 +67,7 @@ An admin dashboard allows viewing, searching, and managing all registrations.
 
 ---
 
-## 🔗 Frontend ↔ Backend Flow
+##  Frontend ↔ Backend Flow
 - Frontend sends requests using `fetch()`  
 - Backend processes via Flask routes  
 - Data stored in MySQL  
@@ -78,7 +75,7 @@ An admin dashboard allows viewing, searching, and managing all registrations.
 
 ---
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 | Layer       | Technology Used        |
 |------------|----------------------|
@@ -89,7 +86,7 @@ An admin dashboard allows viewing, searching, and managing all registrations.
 
 ---
 
-## ☁️ Google Cloud Services (Concept)
+##  Google Cloud Services (Concept)
 
 | Component        | Google Cloud Service Used |
 |-----------------|--------------------------|
@@ -97,18 +94,17 @@ An admin dashboard allows viewing, searching, and managing all registrations.
 | API Hosting     | Cloud Run                |
 | Database        | Cloud SQL (MySQL)        |
 | Storage         | Cloud Storage            |
-| Access Control  | IAM                      |
 | Deployment      | Container-based deployment |
 | Accessibility   | Global URL access        |
 
-## ⚙️ Installation & Setup
+##  Installation & Setup
 
-### 1️⃣ Install Dependencies
+### 1️ Install Dependencies
 ```bash
 pip install flask flask-cors mysql-connector-python
 ```
 
-### 2️⃣ Setup MySQL Database
+### 2️ Setup MySQL Database
 ```sql
 CREATE DATABASE college_events;
 
@@ -123,14 +119,14 @@ CREATE TABLE registrations (
 );
 ```
 
-### 3️⃣ Configure Database (app.py)
+### 3️ Configure Database (app.py)
 ```python
 'password': 'admin123'
 ```
 
 ---
 
-## ▶️ Run the Project
+## Run the Project
 
 ```bash
 python app.py
@@ -143,12 +139,12 @@ http://127.0.0.1:5000
 
 ---
 
-## 🌐 Live Demo
+##  Public URL
 👉 https://college-event-system-evfm.onrender.com/
 
 ---
 
-## ☁️ Google Cloud Integration
+## Google Cloud Integration
 
 ### 🔹 1. Setup Google Cloud Project
 - Open Google Cloud Console  
@@ -233,7 +229,7 @@ We deployed our Flask backend on **Cloud Run**, used **Cloud SQL** for database 
 ### Admin Dashboard
 ![Dashboard](screenshots/dashboard.png)
 
-## 🎥 Demo Video
+##  Demo Video
 
 ▶️ Click the image below to watch:
 
@@ -241,14 +237,7 @@ We deployed our Flask backend on **Cloud Run**, used **Cloud SQL** for database 
 
 ---
 
-## 🔮 Future Improvements
-- User authentication system  
-- Email confirmation feature  
-- Full cloud deployment (Cloud Run + Cloud SQL)  
-- Enhanced mobile responsiveness  
 
----
-
-## ✅ Conclusion
+##  Conclusion
 This project demonstrates full-stack development using **Flask + MySQL** with frontend-backend integration.  
 It also introduces **cloud scalability concepts using Google Cloud services**.
